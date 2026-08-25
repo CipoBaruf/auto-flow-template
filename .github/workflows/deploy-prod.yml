@@ -34,7 +34,12 @@ jobs:
         run: npm run check
 
       - name: Deploy to Render production
-        run: curl -fsS -X POST "$RENDER_PROD_DEPLOY_HOOK" -o /dev/null
+        run: |
+          if [ -z "$RENDER_PROD_DEPLOY_HOOK" ]; then
+            echo "::warning::RENDER_PROD_DEPLOY_HOOK not set (run scripts/bootstrap.sh) — skipping deploy."
+            exit 0
+          fi
+          curl -fsS -X POST "$RENDER_PROD_DEPLOY_HOOK" -o /dev/null
         env:
           RENDER_PROD_DEPLOY_HOOK: ${{ secrets.RENDER_PROD_DEPLOY_HOOK }}
 
