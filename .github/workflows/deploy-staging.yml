@@ -1,0 +1,61 @@
+# Deploys the staging branch to the Render staging service.
+#
+# Trigger notes:
+# - `push` fires when a human pushes to staging.
+# - `workflow_dispatch` exists because pushes made with the default GITHUB_TOKEN
+#   (e.g. from agent.yml) do NOT fire push workflows — agent.yml dispatches this
+#   workflow explicitly after updating the staging branch.
+name: Deploy staging
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: staging
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install
+        working-directory: app
+        run: npm ci
+
+      - name: Test gate (independent of the agent's own checks)
+        working-directory: app
+        run: npm run check
+
+      - name: Deploy to Render staging
+        run: curl -fsS -X POST "$RENDER_STAGING_DEPLOY_HOOK" -o /dev/null
+        env:
+          RENDER_STAGING_DEPLOY_HOOK: ${{ secrets.RENDER_STAGING_DEPLOY_HOOK }}
+
+      - name: Notify success
+        run: |
+          ./scripts/notify.sh "🟡 Staging deployed: ${STAGING_URL:-(set STAGING_URL repo variable)}
+          Test it, then reply 'changes: ...' or 'release'."
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          STAGING_URL: ${{ vars.STAGING_URL }}
+
+      - name: Notify failure
+        if: failure()
+        run: |
+          ./scripts/notify.sh "🔴 Staging deploy FAILED for ${GITHUB_REPOSITORY}. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

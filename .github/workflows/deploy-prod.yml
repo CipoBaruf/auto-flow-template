@@ -1,0 +1,55 @@
+# Deploys main to the Render production service after the release is approved
+# (the relay merges the feature PR into main on your 'release' command).
+name: Deploy production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install
+        working-directory: app
+        run: npm ci
+
+      - name: Test gate
+        working-directory: app
+        run: npm run check
+
+      - name: Deploy to Render production
+        run: curl -fsS -X POST "$RENDER_PROD_DEPLOY_HOOK" -o /dev/null
+        env:
+          RENDER_PROD_DEPLOY_HOOK: ${{ secrets.RENDER_PROD_DEPLOY_HOOK }}
+
+      - name: Notify success
+        run: |
+          ./scripts/notify.sh "🟢 Production deployed: ${PROD_URL:-(set PROD_URL repo variable)}"
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PROD_URL: ${{ vars.PROD_URL }}
+
+      - name: Notify failure
+        if: failure()
+        run: |
+          ./scripts/notify.sh "🔴 PRODUCTION deploy FAILED for ${GITHUB_REPOSITORY}. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
