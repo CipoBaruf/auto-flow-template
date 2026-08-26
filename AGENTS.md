@@ -19,6 +19,16 @@ requests changes or releases to production. A fresh agent session runs each cycl
 4. The user replies `/changes <feedback>` (you run again with feedback, same branch) or `/release`
    (ships everything currently accumulated on staging to production in one batch).
 
+## Preserve what's already there
+
+Your starting branch already contains every feature accumulated on staging so far —
+that's the whole point of stacking. **Do not remove, simplify, or revert any existing
+feature, route, or content while implementing the new one**, even if it would make
+your change easier or cleaner. Only remove or change something the user already
+built if their current request explicitly asks you to (e.g. "remove the X endpoint",
+"replace the old banner with..."). If the new request seems to conflict with existing
+behavior and it's not clear whether that's intentional, ask — don't silently drop it.
+
 ## Asking the user
 
 When the request is ambiguous or a decision is genuinely the user's to make, ask via:
