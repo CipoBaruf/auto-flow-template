@@ -31,4 +31,21 @@ describe("baseline app", () => {
     expect(res.text).toContain("terminal-body");
     expect(res.text).toContain("auto-flow-app");
   });
+
+  it("GET / renders an oh-my-zsh-style prompt line and ASCII divider", async () => {
+    const res = await request(createApp()).get("/");
+    expect(res.text).toContain("class=\"prompt\"");
+    expect(res.text).toContain("prompt-arrow");
+    expect(res.text).toContain("git:(<span class=\"prompt-branch\">main</span>)");
+    expect(res.text).toContain("class=\"divider\"");
+  });
+
+  it("GET / uses a large multi-line figlet-style ASCII banner", async () => {
+    const res = await request(createApp()).get("/");
+    const bannerMatch = res.text.match(/<pre class="banner">([\s\S]*?)<\/pre>/);
+    expect(bannerMatch).not.toBeNull();
+    const bannerLines = (bannerMatch?.[1] ?? "").trim().split("\n");
+    expect(bannerLines.length).toBeGreaterThanOrEqual(12);
+    expect(res.text).toContain("$ cat about.json");
+  });
 });

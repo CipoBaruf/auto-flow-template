@@ -56,12 +56,18 @@ guess on scope ("should this endpoint be public?") — ask.
   must always exist (Render uses it); `/` is the one HTML page — keep its styling
   self-contained in `homePage.ts` rather than pulling in a templating engine or
   static assets pipeline.
-- Current state: `GET /` renders an HTML landing page (glowing ASCII-art banner spelling
-  "AUTO FLOW" in a `<pre class="banner">`, project overview, a terminal-styled
-  "about.json" card rendering `PROJECT_INFO` in `homePage.ts` — name, tagline, stack,
-  author, repo — and a footer crediting Ezequiel with a link to
+- Current state: `GET /` renders an HTML landing page with a large multi-line figlet-style
+  ASCII wordmark spelling "AUTO" / "FLOW" (block-letter art in a `<pre class="banner">`,
+  gradient-colored via CSS `background-clip: text`), a decorative ASCII divider, an
+  oh-my-zsh-style prompt line (`➜ auto-flow-app git:(main) ✗`), project overview cards
+  with HUD-style corner accents, a terminal-styled "about.json" card (fake `$ cat
+  about.json` prompt line + `PROJECT_INFO` rendered as JSON in `homePage.ts` — name,
+  tagline, stack, author, repo), and a footer crediting Ezequiel with a link to
   `https://github.com/cipoBaruf` plus a link to this repo,
   `https://github.com/CipoBaruf/auto-flow-template/`); `GET /health` returns JSON status +
   environment. No database.
-- Styling: dark, clean theme (near-black background, violet `--accent`, no orange) in
-  the spirit of render.com/Claude Code CLI — keep it that way for any future `/` changes.
+- Styling: dark, clean theme (near-black background, violet `--accent` + teal
+  `--accent-2`, no orange) in the spirit of render.com/oh-my-zsh terminal splash
+  screens — big gradient ASCII wordmarks, terminal/HUD framing, monospace accents —
+  keep it that way for any future `/` changes. The banner text is built letter-by-letter
+  from fixed-width ASCII-art glyphs; verify line lengths stay aligned if you change it.

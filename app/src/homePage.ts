@@ -1,21 +1,17 @@
 const BANNER = String.raw`
-╔═════════════════════════╗
-║                         ║
-║   ██  █  █ ████  ██     ║
-║  █  █ █  █  ██  █  █    ║
-║  ████ █  █  ██  █  █    ║
-║  █  █ █  █  ██  █  █    ║
-║  █  █  ██   ██   ██     ║
-║                         ║
-║  ████ █     ██  █   █   ║
-║  █    █    █  █ █   █   ║
-║  ███  █    █  █ █ █ █   ║
-║  █    █    █  █ █ █ █   ║
-║  █    ████  ██   █ █    ║
-║                         ║
-║     · app creator ·     ║
-║                         ║
-╚═════════════════════════╝
+ █████╗ ██╗   ██╗████████╗ ██████╗
+██╔══██╗██║   ██║╚══██╔══╝██╔═══██╗
+███████║██║   ██║   ██║   ██║   ██║
+██╔══██║██║   ██║   ██║   ██║   ██║
+██║  ██║╚██████╔╝   ██║   ╚██████╔╝
+╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝
+
+███████╗██╗      ██████╗ ██╗    ██╗
+██╔════╝██║     ██╔═══██╗██║    ██║
+█████╗  ██║     ██║   ██║██║ █╗ ██║
+██╔══╝  ██║     ██║   ██║██║███╗██║
+██║     ███████╗╚██████╔╝╚███╔███╔╝
+╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
 `.trim();
 
 const STEPS = [
@@ -80,6 +76,10 @@ export function renderHomePage(): string {
     --line: #232833;
     --accent: #8b7cf6;
     --accent-dim: #6e5fd1;
+    --accent-2: #52d8c4;
+    --ok: #63c374;
+    --warn: #f4c05d;
+    --err: #f16565;
     --mono: "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
@@ -90,7 +90,7 @@ export function renderHomePage(): string {
     background: var(--bg);
     background-image:
       radial-gradient(circle at 15% 0%, rgba(139, 124, 246, 0.08), transparent 45%),
-      radial-gradient(circle at 85% 100%, rgba(139, 124, 246, 0.06), transparent 45%);
+      radial-gradient(circle at 85% 100%, rgba(82, 216, 196, 0.06), transparent 45%);
     color: var(--ink);
     font-family: var(--sans);
     display: flex;
@@ -103,43 +103,112 @@ export function renderHomePage(): string {
   }
   pre.banner {
     font-family: var(--mono);
-    font-size: 0.78rem;
-    line-height: 1.3;
-    color: var(--accent);
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin: 0 0 2.5rem;
-    overflow-x: auto;
+    font-size: 0.68rem;
+    line-height: 1.25;
+    font-weight: 700;
+    margin: 0 auto;
+    padding: 0;
     text-align: center;
-    text-shadow: 0 0 18px rgba(139, 124, 246, 0.35);
+    white-space: pre;
+    display: inline-block;
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 14px rgba(139, 124, 246, 0.35));
   }
+  .banner-wrap {
+    overflow-x: auto;
+    margin: 0 0 1.1rem;
+  }
+  .divider {
+    text-align: center;
+    font-family: var(--mono);
+    color: var(--line);
+    letter-spacing: 0.3em;
+    font-size: 0.7rem;
+    margin: 0 0 1.6rem;
+  }
+  .prompt {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    margin: 0 0 2.5rem;
+  }
+  .prompt-arrow { color: var(--ok); font-weight: 700; }
+  .prompt-dir { color: var(--accent-2); }
+  .prompt-git { color: var(--muted); }
+  .prompt-branch { color: var(--accent); }
+  .prompt-dirty { color: var(--err); }
   h1 {
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     margin: 0 0 0.4rem;
     color: var(--ink);
+    text-align: center;
   }
   p.tagline {
     margin: 0 0 2.5rem;
     color: var(--muted);
     font-size: 0.95rem;
+    text-align: center;
   }
   section.card {
+    position: relative;
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 10px;
     padding: 1.75rem;
     margin-bottom: 2.5rem;
   }
+  section.card::before,
+  section.card::after,
+  section.card h2::before,
+  section.card h2::after {
+    content: "";
+  }
+  section.card::before,
+  section.card::after {
+    position: absolute;
+    width: 0.85rem;
+    height: 0.85rem;
+    border: 1px solid var(--accent-dim);
+    opacity: 0.6;
+  }
+  section.card::before {
+    top: -1px;
+    left: -1px;
+    border-right: none;
+    border-bottom: none;
+    border-top-left-radius: 4px;
+  }
+  section.card::after {
+    bottom: -1px;
+    right: -1px;
+    border-left: none;
+    border-top: none;
+    border-bottom-right-radius: 4px;
+  }
   section.card h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--accent);
     margin: 0 0 1.25rem;
+  }
+  section.card h2 .chevron {
+    color: var(--accent-2);
+  }
+  section.card h2::after {
+    flex: 1;
+    height: 0;
+    border-top: 1px dashed var(--line);
   }
   ol {
     list-style: none;
@@ -189,9 +258,9 @@ export function renderHomePage(): string {
     border-radius: 50%;
     background: var(--line);
   }
-  .terminal-bar .dot-red { background: #f16565; }
-  .terminal-bar .dot-yellow { background: #f4c05d; }
-  .terminal-bar .dot-green { background: #63c374; }
+  .terminal-bar .dot-red { background: var(--err); }
+  .terminal-bar .dot-yellow { background: var(--warn); }
+  .terminal-bar .dot-green { background: var(--ok); }
   .terminal-title {
     margin-left: 0.25rem;
     font-family: var(--mono);
@@ -207,12 +276,20 @@ export function renderHomePage(): string {
     color: var(--ink);
     overflow-x: auto;
   }
+  .prompt-cmd { color: var(--accent-2); }
   .json-key { color: var(--accent); }
   .json-str { color: #7fd8a4; }
   footer {
     text-align: center;
     font-size: 0.85rem;
     color: var(--muted);
+    font-family: var(--mono);
+  }
+  footer .rule {
+    color: var(--line);
+    letter-spacing: 0.4em;
+    margin: 0 0 1rem;
+    font-size: 0.7rem;
   }
   footer a {
     color: var(--accent);
@@ -229,11 +306,18 @@ export function renderHomePage(): string {
 </head>
 <body>
   <main>
-    <pre class="banner">${BANNER}</pre>
+    <div class="banner-wrap"><pre class="banner">${BANNER}</pre></div>
+    <p class="divider">◆ ─────────────────────────────── ◆</p>
+    <p class="prompt">
+      <span class="prompt-arrow">&#10148;</span>
+      <span class="prompt-dir">auto-flow-app</span>
+      <span class="prompt-git">git:(<span class="prompt-branch">main</span>)</span>
+      <span class="prompt-dirty">&#10007;</span>
+    </p>
     <h1>Auto Flow App Creator</h1>
     <p class="tagline">Clean code. Automatic flow. Trusted by design.</p>
     <section class="card">
-      <h2>How a cycle works</h2>
+      <h2><span class="chevron">&#10095;</span> How a cycle works</h2>
       <ol>${steps}
       </ol>
     </section>
@@ -244,9 +328,12 @@ export function renderHomePage(): string {
         <span class="dot dot-green"></span>
         <span class="terminal-title">about.json</span>
       </div>
-      <pre class="terminal-body">${renderProjectInfoJson()}</pre>
+      <pre class="terminal-body"><span class="prompt-cmd">$ cat about.json</span>
+
+${renderProjectInfoJson()}</pre>
     </section>
     <footer>
+      <p class="rule">· · · · · · · · · · · · · · · · · · ·</p>
       Built by Ezequiel &middot; <a href="https://github.com/cipoBaruf">github.com/cipoBaruf</a>
       <a class="repo-link" href="${REPO_URL}">${REPO_URL}</a>
     </footer>
