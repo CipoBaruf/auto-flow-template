@@ -12,8 +12,11 @@
 # (branch, commit, push, PR, staging fast-forward) so runs stay deterministic.
 #
 # Auth: CLAUDE_CODE_OAUTH_TOKEN (from `claude setup-token`, subscription-billed).
-# GH_PAT is a classic PAT with repo scope — used instead of GITHUB_TOKEN so that
-# pushes/PRs from this workflow still trigger the other workflows.
+# GH_PAT is a fine-grained PAT scoped to only this repo (Contents/Issues/PRs/
+# Actions read-write, Metadata read) — used instead of GITHUB_TOKEN so that
+# pushes/PRs from this workflow still trigger the other workflows. Scoped to one
+# repo, not a classic repo-wide token, since the agent runs with
+# --dangerously-skip-permissions and this token is reachable from its bash session.
 name: Developer agent
 
 on:

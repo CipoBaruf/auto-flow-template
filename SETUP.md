@@ -34,8 +34,13 @@ Free-tier note: services sleep after 15 min idle; first request after that takes
 ## 4. Tokens
 
 - `claude setup-token` on your machine → **Claude Code OAuth token** (subscription-billed).
-- GitHub → Settings → Developer settings → **classic PAT** with `repo` scope (lets agent
-  pushes/PRs trigger workflows; the default GITHUB_TOKEN can't).
+- GitHub → Settings → **Developer settings → Personal access tokens → Fine-grained tokens**
+  → generate one scoped to **only this repository**, with permissions: Contents (Read & write),
+  Issues (Read & write), Pull requests (Read & write), Actions (Read & write), Metadata
+  (Read-only). This is what lets the agent's pushes/PRs trigger workflows (the default
+  GITHUB_TOKEN can't) — scoping it to one repo instead of a classic `repo`-scope token
+  matters because the agent runs with `--dangerously-skip-permissions`, so keep its
+  credentials' blast radius to this project only.
 
 ## 5. Wire it up
 
