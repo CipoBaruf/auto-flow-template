@@ -9,7 +9,11 @@ export function createApp() {
   });
 
   app.get("/", (_req, res) => {
-    res.json({ name: "auto-flow-app", message: "Baseline app for the automatic flow development cycle." });
+    res.json({
+      name: "auto-flow-app",
+      message: "Baseline app for the automatic flow development cycle.",
+      serverTime: new Date().toISOString(),
+    });
   });
 
   return app;

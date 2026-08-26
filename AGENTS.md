@@ -54,3 +54,4 @@ guess on scope ("should this endpoint be public?") — ask.
 - Conventions: small routers per domain as the app grows; JSON responses; `/health`
   must always exist (Render uses it).
 - Current state: baseline scaffold only — `/` and `/health` endpoints, no database.
+  `/` includes `serverTime` (ISO 8601 string, from `new Date().toISOString()` at request time).

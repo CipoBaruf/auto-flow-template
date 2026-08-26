@@ -31,7 +31,7 @@ you (Telegram) ──/feature──▶ relay (your machine) ──dispatch──
 ## The app (`app/`)
 
 Baseline placeholder the agent grows feature by feature: Node 24 + TypeScript + Express,
-Vitest tests. Endpoints: `GET /` (info), `GET /health` (status + environment).
+Vitest tests. Endpoints: `GET /` (info + current server time), `GET /health` (status + environment).
 
 ```bash
 cd app && npm install && npm run dev     # local dev on :3000
