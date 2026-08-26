@@ -12,7 +12,7 @@ echo
 read -rp "Telegram bot token (from @BotFather): " TELEGRAM_BOT_TOKEN
 read -rp "Your Telegram chat id (send /start to the bot, relay prints it; or use @userinfobot): " TELEGRAM_CHAT_ID
 read -rp "Claude Code OAuth token (run: claude setup-token): " CLAUDE_CODE_OAUTH_TOKEN
-read -rp "GitHub fine-grained PAT scoped to THIS repo only (Contents/Issues/PRs/Actions RW, Metadata R): " GH_PAT
+read -rp "GitHub classic PAT with 'repo' scope (see SETUP.md for a tighter-scoped alternative): " GH_PAT
 read -rp "Render STAGING deploy hook URL: " RENDER_STAGING_DEPLOY_HOOK
 read -rp "Render PROD deploy hook URL: " RENDER_PROD_DEPLOY_HOOK
 read -rp "Staging public URL (e.g. https://myapp-staging.onrender.com): " STAGING_URL

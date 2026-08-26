@@ -34,13 +34,16 @@ Free-tier note: services sleep after 15 min idle; first request after that takes
 ## 4. Tokens
 
 - `claude setup-token` on your machine → **Claude Code OAuth token** (subscription-billed).
-- GitHub → Settings → **Developer settings → Personal access tokens → Fine-grained tokens**
-  → generate one scoped to **only this repository**, with permissions: Contents (Read & write),
-  Issues (Read & write), Pull requests (Read & write), Actions (Read & write), Metadata
-  (Read-only). This is what lets the agent's pushes/PRs trigger workflows (the default
-  GITHUB_TOKEN can't) — scoping it to one repo instead of a classic `repo`-scope token
-  matters because the agent runs with `--dangerously-skip-permissions`, so keep its
-  credentials' blast radius to this project only.
+- GitHub → Settings → **Developer settings → Personal access tokens → Tokens (classic)**
+  → Generate new token → check only the **`repo`** scope → Generate. This is what lets
+  the agent's pushes/PRs trigger workflows (the default GITHUB_TOKEN can't).
+
+  *Tighter scoping:* a fine-grained token limited to just this repo (Contents/Issues/
+  Pull requests/Actions Read & write, Metadata Read-only) is the better fit given the
+  agent runs with `--dangerously-skip-permissions` — but GitHub's fine-grained
+  permission UI has been unreliable in practice (permission edits not taking effect
+  even after saving). If you hit repeated 403s on writes after setting one up, fall
+  back to the classic token above rather than debugging it further.
 
 ## 5. Wire it up
 
