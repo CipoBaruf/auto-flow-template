@@ -45,7 +45,8 @@ Free-tier note: services sleep after 15 min idle; first request after that takes
 ## 5. Wire it up
 
 ```bash
-./scripts/bootstrap.sh   # sets all secrets/variables via gh, creates staging branch, sends a test message
+./scripts/bootstrap.sh   # sets secrets/variables, creates the staging branch, protects main
+                          # (requires the test check before any merge), sends a test message
 ```
 
 ## 6. Register in the relay
@@ -64,4 +65,6 @@ npm start   # long polling — no public URL needed; runs on your machine
 
 Send the bot: `/feature myproject add an endpoint that returns the server time`
 — then answer its questions, test the staging URL when notified, and reply
-`/changes <feedback>` or `/release`.
+`/changes <feedback>` or `/release`. You can send another `/feature` before
+releasing too — it builds on top of the current one on staging instead of
+replacing it (see the flow diagram in the main [README](README.md)).

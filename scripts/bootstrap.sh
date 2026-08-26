@@ -32,6 +32,18 @@ echo "Creating the staging branch (tracks whatever feature is under review)..."
 git push origin HEAD:staging 2>/dev/null || echo "  (staging already exists or push it manually)"
 
 echo
+echo "Protecting main: requiring the 'test' check to pass before any merge..."
+echo "(authoritative gate — even if /release's own pre-check has a bug, GitHub itself refuses the merge)"
+gh api -X PUT "repos/$(gh repo view --json nameWithOwner --jq .nameWithOwner)/branches/main/protection" --input - <<'EOF' >/dev/null
+{
+  "required_status_checks": { "strict": false, "contexts": ["test"] },
+  "enforce_admins": false,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+EOF
+
+echo
 echo "Verifying: sending a test Telegram message..."
 TELEGRAM_BOT_TOKEN="$TELEGRAM_BOT_TOKEN" TELEGRAM_CHAT_ID="$TELEGRAM_CHAT_ID" \
   ./scripts/notify.sh "✅ auto-flow bootstrap complete for $(gh repo view --json nameWithOwner --jq .nameWithOwner)"
