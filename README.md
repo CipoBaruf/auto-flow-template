@@ -16,8 +16,13 @@ you (Telegram) ──/feature──▶ relay (your machine) ──dispatch──
      │                                                                    │
      │◀── "🟡 staging deployed, test it" ◀── deploy-staging (test gate → Render staging)
      ├── /changes <feedback> ──▶ agent runs again on the same branch
-     └── /release ──▶ PR merges to main ──▶ deploy-prod (test gate → Render production)
+     ├── /feature <next thing> ──▶ next feature branches from staging's tip (stacks); previous PR auto-closes
+     └── /release ──▶ everything accumulated on staging merges to main ──▶ deploy-prod (test gate → Render production)
 ```
+
+Send `/feature` again before releasing and the next feature builds on top of the current
+one instead of replacing it — staging keeps accumulating until you `/release`, which ships
+the whole batch at once.
 
 ## Components
 

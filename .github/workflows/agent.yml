@@ -50,13 +50,18 @@ jobs:
           token: ${{ secrets.GH_PAT }}
 
       - name: Prepare branch
+        # New features branch from the tip of `staging`, not `main`, so staging
+        # accumulates everything requested since the last /release (a "stack").
+        # /release then ships the whole accumulated batch at once. The relay
+        # closes the previous feature's now-superseded PR when a new /feature
+        # request comes in (see auto-flow-relay's bot.command("feature")).
         run: |
           git config user.name "auto-flow-agent"
           git config user.email "agent@users.noreply.github.com"
           if [ "${{ github.event.action }}" = "feature-changes" ] && git ls-remote --exit-code origin "$BRANCH" >/dev/null 2>&1; then
             git checkout -B "$BRANCH" "origin/$BRANCH"
           else
-            git checkout -B "$BRANCH" origin/main
+            git checkout -B "$BRANCH" origin/staging
           fi
 
       - uses: actions/setup-node@v4
