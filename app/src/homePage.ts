@@ -25,6 +25,36 @@ const STEPS = [
   ["ship", "you review on staging, then /release promotes to production"],
 ] as const;
 
+const REPO_URL = "https://github.com/CipoBaruf/auto-flow-template/";
+
+const PROJECT_INFO = {
+  name: "auto-flow-app",
+  tagline: "Clean code. Automatic flow. Trusted by design.",
+  stack: ["Node 24", "TypeScript", "Express"],
+  author: "Ezequiel",
+  repo: REPO_URL,
+} as const;
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[char] as string);
+}
+
+function jsonValueHtml(value: string | readonly string[]): string {
+  if (Array.isArray(value)) {
+    const items = value.map((item) => `<span class="json-str">"${escapeHtml(item)}"</span>`).join(", ");
+    return `[${items}]`;
+  }
+  return `<span class="json-str">"${escapeHtml(value as string)}"</span>`;
+}
+
+function renderProjectInfoJson(): string {
+  const lines = Object.entries(PROJECT_INFO).map(
+    ([key, value]) =>
+      `  <span class="json-key">"${key}"</span>: ${jsonValueHtml(value as string | readonly string[])}`,
+  );
+  return `{\n${lines.join(",\n")}\n}`;
+}
+
 export function renderHomePage(): string {
   const steps = STEPS.map(
     ([label, description]) => `
@@ -141,6 +171,44 @@ export function renderHomePage(): string {
   .step-desc {
     color: var(--muted);
   }
+  section.terminal {
+    padding: 0;
+    overflow: hidden;
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .terminal-bar .dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .terminal-bar .dot-red { background: #f16565; }
+  .terminal-bar .dot-yellow { background: #f4c05d; }
+  .terminal-bar .dot-green { background: #63c374; }
+  .terminal-title {
+    margin-left: 0.25rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  pre.terminal-body {
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--ink);
+    overflow-x: auto;
+  }
+  .json-key { color: var(--accent); }
+  .json-str { color: #7fd8a4; }
   footer {
     text-align: center;
     font-size: 0.85rem;
@@ -152,6 +220,11 @@ export function renderHomePage(): string {
     font-family: var(--mono);
   }
   footer a:hover { text-decoration: underline; color: var(--accent-dim); }
+  footer .repo-link {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+  }
 </style>
 </head>
 <body>
@@ -164,8 +237,18 @@ export function renderHomePage(): string {
       <ol>${steps}
       </ol>
     </section>
+    <section class="card terminal">
+      <div class="terminal-bar">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        <span class="terminal-title">about.json</span>
+      </div>
+      <pre class="terminal-body">${renderProjectInfoJson()}</pre>
+    </section>
     <footer>
       Built by Ezequiel &middot; <a href="https://github.com/cipoBaruf">github.com/cipoBaruf</a>
+      <a class="repo-link" href="${REPO_URL}">${REPO_URL}</a>
     </footer>
   </main>
 </body>

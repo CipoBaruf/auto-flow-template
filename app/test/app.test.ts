@@ -24,4 +24,11 @@ describe("baseline app", () => {
     expect(res.text).toContain("color-scheme: dark");
     expect(res.text).not.toMatch(/orange|#d97757/i);
   });
+
+  it("GET / includes a repo link and a fancy project-info block", async () => {
+    const res = await request(createApp()).get("/");
+    expect(res.text).toContain("https://github.com/CipoBaruf/auto-flow-template/");
+    expect(res.text).toContain("terminal-body");
+    expect(res.text).toContain("auto-flow-app");
+  });
 });

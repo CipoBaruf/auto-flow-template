@@ -57,8 +57,11 @@ guess on scope ("should this endpoint be public?") — ask.
   self-contained in `homePage.ts` rather than pulling in a templating engine or
   static assets pipeline.
 - Current state: `GET /` renders an HTML landing page (glowing ASCII-art banner spelling
-  "AUTO FLOW" in a `<pre class="banner">`, project overview, footer crediting Ezequiel
-  with a link to `https://github.com/cipoBaruf`); `GET /health` returns JSON status +
+  "AUTO FLOW" in a `<pre class="banner">`, project overview, a terminal-styled
+  "about.json" card rendering `PROJECT_INFO` in `homePage.ts` — name, tagline, stack,
+  author, repo — and a footer crediting Ezequiel with a link to
+  `https://github.com/cipoBaruf` plus a link to this repo,
+  `https://github.com/CipoBaruf/auto-flow-template/`); `GET /health` returns JSON status +
   environment. No database.
 - Styling: dark, clean theme (near-black background, violet `--accent`, no orange) in
   the spirit of render.com/Claude Code CLI — keep it that way for any future `/` changes.
