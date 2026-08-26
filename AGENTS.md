@@ -53,4 +53,5 @@ guess on scope ("should this endpoint be public?") — ask.
   `app/src/index.ts` is the entrypoint; tests in `app/test/`.
 - Conventions: small routers per domain as the app grows; JSON responses; `/health`
   must always exist (Render uses it).
-- Current state: baseline scaffold only — `/` and `/health` endpoints, no database.
+- Current state: `/` and `/health` endpoints, plus `/time` (returns current server
+  time as ISO 8601 in `{ now }`); no database.

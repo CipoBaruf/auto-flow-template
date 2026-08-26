@@ -12,5 +12,9 @@ export function createApp() {
     res.json({ name: "auto-flow-app", message: "Baseline app for the automatic flow development cycle." });
   });
 
+  app.get("/time", (_req, res) => {
+    res.json({ now: new Date().toISOString() });
+  });
+
   return app;
 }
