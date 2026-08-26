@@ -51,7 +51,7 @@ jobs:
       - name: Notify success
         run: |
           ./scripts/notify.sh "🟡 Staging deployed: ${STAGING_URL:-(set STAGING_URL repo variable)}
-          Test it, then reply 'changes: ...' or 'release'."
+          Test it, then reply /changes <feedback> or /release."
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

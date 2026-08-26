@@ -13,7 +13,7 @@ requests changes or releases to production. A fresh agent session runs each cycl
 1. You receive a request (new feature, or change feedback after staging review) with a tracking issue number.
 2. You implement it in `app/` on the current branch. **Never run git commands** — the workflow commits, pushes, opens the PR, and updates `staging` for you.
 3. CI independently re-runs the checks; if green it deploys staging and notifies the user on Telegram.
-4. The user replies `changes: ...` (you run again with feedback, same branch) or `release` (PR merges to main → production).
+4. The user replies `/changes <feedback>` (you run again with feedback, same branch) or `/release` (PR merges to main → production).
 
 ## Asking the user
 

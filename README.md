@@ -15,8 +15,8 @@ you (Telegram) ──/feature──▶ relay (your machine) ──dispatch──
      │◀── questions / notify ─────┴─────────────────────────────────┘ pushes → PR → staging branch
      │                                                                    │
      │◀── "🟡 staging deployed, test it" ◀── deploy-staging (test gate → Render staging)
-     ├── "changes: ..." ──▶ agent runs again on the same branch
-     └── "release" ──▶ PR merges to main ──▶ deploy-prod (test gate → Render production)
+     ├── /changes <feedback> ──▶ agent runs again on the same branch
+     └── /release ──▶ PR merges to main ──▶ deploy-prod (test gate → Render production)
 ```
 
 ## Components

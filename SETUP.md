@@ -59,4 +59,4 @@ npm start   # long polling — no public URL needed; runs on your machine
 
 Send the bot: `/feature myproject add an endpoint that returns the server time`
 — then answer its questions, test the staging URL when notified, and reply
-`changes: ...` or `release`.
+`/changes <feedback>` or `/release`.
