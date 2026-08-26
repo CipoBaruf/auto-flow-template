@@ -40,6 +40,7 @@ while [ "$(date +%s)" -lt "$DEADLINE" ]; do
     --jq '[.[] | select(.body | startswith("[answer]"))] | last | .body // empty' 2>/dev/null || true)
   if [ -n "$ANSWER" ]; then
     clear_label
+    ./scripts/notify.sh "✅ [#${ISSUE}] Got your answer, agent is continuing..."
     printf '%s\n' "${ANSWER#\[answer\]}" | sed 's/^[[:space:]]*//'
     exit 0
   fi
