@@ -1,4 +1,5 @@
 import express from "express";
+import { renderHomePage } from "./homePage.js";
 
 export function createApp() {
   const app = express();
@@ -9,7 +10,7 @@ export function createApp() {
   });
 
   app.get("/", (_req, res) => {
-    res.json({ name: "auto-flow-app", message: "Baseline app for the automatic flow development cycle." });
+    res.type("html").send(renderHomePage());
   });
 
   return app;

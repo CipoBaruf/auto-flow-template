@@ -50,7 +50,14 @@ guess on scope ("should this endpoint be public?") — ask.
 
 - Stack: Node 24, TypeScript (strict, ESM), Express 4, Vitest + Supertest.
 - Layout: `app/src/app.ts` builds the Express app (keep it export-only for testability);
-  `app/src/index.ts` is the entrypoint; tests in `app/test/`.
-- Conventions: small routers per domain as the app grows; JSON responses; `/health`
-  must always exist (Render uses it).
-- Current state: baseline scaffold only — `/` and `/health` endpoints, no database.
+  `app/src/index.ts` is the entrypoint; `app/src/homePage.ts` renders the `/` landing
+  page; tests in `app/test/`.
+- Conventions: small routers per domain as the app grows; JSON responses for API-style
+  endpoints; `/health` must always exist (Render uses it) and stay JSON.
+- `GET /` is the exception to "JSON responses": it renders an HTML landing page (dark,
+  terminal-styled) with an ASCII-only banner, a short project summary, and an author
+  line. Content lives in `app/src/homePage.ts` (`PROJECT_NAME`, `PROJECT_SUMMARY`,
+  `AUTHOR_NAME`) — update those constants (and the hand-built `ASCII_BANNER` box, sized
+  to fit its text) if the project name, summary, or author changes.
+- Current state: `/` (ASCII-art HTML landing page) and `/health` (JSON) endpoints, no
+  database.
