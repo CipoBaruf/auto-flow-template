@@ -50,8 +50,13 @@ guess on scope ("should this endpoint be public?") — ask.
 
 - Stack: Node 24, TypeScript (strict, ESM), Express 4, Vitest + Supertest.
 - Layout: `app/src/app.ts` builds the Express app (keep it export-only for testability);
-  `app/src/index.ts` is the entrypoint; tests in `app/test/`.
-- Conventions: small routers per domain as the app grows; JSON responses; `/health`
-  must always exist (Render uses it).
-- Current state: `/` and `/health` endpoints, no database. `GET /` includes a
-  `github` field with the author's GitHub profile link (`https://github.com/cipoBaruf`).
+  `app/src/homePage.ts` renders the `GET /` landing page HTML (self-contained, inline
+  `<style>`); `app/src/index.ts` is the entrypoint; tests in `app/test/`.
+- Conventions: small routers per domain as the app grows; `/health` stays JSON and
+  must always exist (Render uses it); `/` is the one HTML page — keep its styling
+  self-contained in `homePage.ts` rather than pulling in a templating engine or
+  static assets pipeline.
+- Current state: `GET /` renders an HTML landing page (ASCII banner in a `<pre>`,
+  project overview, footer crediting Ezequiel with a link to
+  `https://github.com/cipoBaruf`); `GET /health` returns JSON status + environment.
+  No database.

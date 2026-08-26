@@ -9,10 +9,13 @@ describe("baseline app", () => {
     expect(res.body.status).toBe("ok");
   });
 
-  it("GET / returns app info", async () => {
+  it("GET / renders the HTML landing page", async () => {
     const res = await request(createApp()).get("/");
     expect(res.status).toBe(200);
-    expect(res.body.name).toBe("auto-flow-app");
-    expect(res.body.github).toBe("https://github.com/cipoBaruf");
+    expect(res.headers["content-type"]).toMatch(/html/);
+    expect(res.text).toContain("<pre class=\"banner\">");
+    expect(res.text).toContain("Auto Flow App Creator");
+    expect(res.text).toContain("Ezequiel");
+    expect(res.text).toContain("https://github.com/cipoBaruf");
   });
 });
