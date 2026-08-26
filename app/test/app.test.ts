@@ -13,5 +13,6 @@ describe("baseline app", () => {
     const res = await request(createApp()).get("/");
     expect(res.status).toBe(200);
     expect(res.body.name).toBe("auto-flow-app");
+    expect(res.body.github).toBe("https://github.com/cipoBaruf");
   });
 });
