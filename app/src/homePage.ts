@@ -1,10 +1,21 @@
 const BANNER = String.raw`
-╔══════════════════════════════════════════════╗
-║                                                ║
-║        A U T O   F L O W                      ║
-║        · app creator ·                        ║
-║                                                ║
-╚══════════════════════════════════════════════╝
+╔═════════════════════════╗
+║                         ║
+║   ██  █  █ ████  ██     ║
+║  █  █ █  █  ██  █  █    ║
+║  ████ █  █  ██  █  █    ║
+║  █  █ █  █  ██  █  █    ║
+║  █  █  ██   ██   ██     ║
+║                         ║
+║  ████ █     ██  █   █   ║
+║  █    █    █  █ █   █   ║
+║  ███  █    █  █ █ █ █   ║
+║  █    █    █  █ █ █ █   ║
+║  █    ████  ██   █ █    ║
+║                         ║
+║     · app creator ·     ║
+║                         ║
+╚═════════════════════════╝
 `.trim();
 
 const STEPS = [
@@ -31,20 +42,25 @@ export function renderHomePage(): string {
 <title>Auto Flow App Creator</title>
 <style>
   :root {
-    color-scheme: light;
-    --ink: #1b1b18;
-    --paper: #f5f4ed;
-    --card: #ffffff;
-    --line: #e3e1d6;
-    --accent: #d97757;
-    --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    color-scheme: dark;
+    --ink: #e4e7ec;
+    --muted: #8a93a3;
+    --bg: #0a0d12;
+    --card: #10141b;
+    --line: #232833;
+    --accent: #8b7cf6;
+    --accent-dim: #6e5fd1;
+    --mono: "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     padding: 4rem 1.5rem 3rem;
-    background: var(--paper);
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(139, 124, 246, 0.08), transparent 45%),
+      radial-gradient(circle at 85% 100%, rgba(139, 124, 246, 0.06), transparent 45%);
     color: var(--ink);
     font-family: var(--sans);
     display: flex;
@@ -57,9 +73,9 @@ export function renderHomePage(): string {
   }
   pre.banner {
     font-family: var(--mono);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     line-height: 1.3;
-    color: var(--ink);
+    color: var(--accent);
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -67,16 +83,18 @@ export function renderHomePage(): string {
     margin: 0 0 2.5rem;
     overflow-x: auto;
     text-align: center;
+    text-shadow: 0 0 18px rgba(139, 124, 246, 0.35);
   }
   h1 {
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     margin: 0 0 0.4rem;
+    color: var(--ink);
   }
   p.tagline {
     margin: 0 0 2.5rem;
-    color: #5c5a4e;
+    color: var(--muted);
     font-size: 0.95rem;
   }
   section.card {
@@ -121,19 +139,19 @@ export function renderHomePage(): string {
     min-width: 5.5rem;
   }
   .step-desc {
-    color: #5c5a4e;
+    color: var(--muted);
   }
   footer {
     text-align: center;
     font-size: 0.85rem;
-    color: #5c5a4e;
+    color: var(--muted);
   }
   footer a {
     color: var(--accent);
     text-decoration: none;
     font-family: var(--mono);
   }
-  footer a:hover { text-decoration: underline; }
+  footer a:hover { text-decoration: underline; color: var(--accent-dim); }
 </style>
 </head>
 <body>

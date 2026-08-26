@@ -18,4 +18,10 @@ describe("baseline app", () => {
     expect(res.text).toContain("Ezequiel");
     expect(res.text).toContain("https://github.com/cipoBaruf");
   });
+
+  it("GET / uses a dark color scheme without orange accents", async () => {
+    const res = await request(createApp()).get("/");
+    expect(res.text).toContain("color-scheme: dark");
+    expect(res.text).not.toMatch(/orange|#d97757/i);
+  });
 });
