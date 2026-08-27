@@ -9,11 +9,14 @@ describe("baseline app", () => {
     expect(res.body.status).toBe("ok");
   });
 
-  it("GET / renders the HTML landing page with only the hero text", async () => {
+  it("GET / renders the HTML landing page", async () => {
     const res = await request(createApp()).get("/");
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch(/html/);
-    expect(res.text).toContain("<h1 class=\"hero\">Santi vuelos laterales</h1>");
+    expect(res.text).toContain("<pre class=\"banner\">");
+    expect(res.text).toContain("Auto Flow App Creator");
+    expect(res.text).toContain("Ezequiel");
+    expect(res.text).toContain("https://github.com/cipoBaruf");
   });
 
   it("GET / uses a dark color scheme without orange accents", async () => {
@@ -22,15 +25,27 @@ describe("baseline app", () => {
     expect(res.text).not.toMatch(/orange|#d97757/i);
   });
 
-  it("GET / removed the old banner, chat, prompt, and footer content", async () => {
+  it("GET / includes a repo link and a fancy project-info block", async () => {
     const res = await request(createApp()).get("/");
-    expect(res.text).not.toContain("<pre class=\"banner\">");
-    expect(res.text).not.toContain("class=\"prompt\"");
-    expect(res.text).not.toContain("class=\"divider\"");
-    expect(res.text).not.toContain("terminal-body");
-    expect(res.text).not.toContain("<footer>");
-    expect(res.text).not.toContain("László Bende");
-    expect(res.text).not.toContain("Ezequiel");
-    expect(res.text).not.toContain("github.com/CipoBaruf");
+    expect(res.text).toContain("https://github.com/CipoBaruf/auto-flow-template/");
+    expect(res.text).toContain("terminal-body");
+    expect(res.text).toContain("auto-flow-app");
+  });
+
+  it("GET / renders an oh-my-zsh-style prompt line and ASCII divider", async () => {
+    const res = await request(createApp()).get("/");
+    expect(res.text).toContain("class=\"prompt\"");
+    expect(res.text).toContain("prompt-arrow");
+    expect(res.text).toContain("git:(<span class=\"prompt-branch\">main</span>)");
+    expect(res.text).toContain("class=\"divider\"");
+  });
+
+  it("GET / uses a large multi-line figlet-style ASCII banner", async () => {
+    const res = await request(createApp()).get("/");
+    const bannerMatch = res.text.match(/<pre class="banner">([\s\S]*?)<\/pre>/);
+    expect(bannerMatch).not.toBeNull();
+    const bannerLines = (bannerMatch?.[1] ?? "").trim().split("\n");
+    expect(bannerLines.length).toBeGreaterThanOrEqual(12);
+    expect(res.text).toContain("$ cat about.json");
   });
 });
