@@ -14,7 +14,6 @@ describe("baseline app", () => {
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch(/html/);
     expect(res.text).toContain("<pre class=\"banner\">");
-    expect(res.text).toContain("Auto Flow App Creator");
     expect(res.text).toContain("Ezequiel");
     expect(res.text).toContain("https://github.com/cipoBaruf");
   });
@@ -25,11 +24,9 @@ describe("baseline app", () => {
     expect(res.text).not.toMatch(/orange|#d97757/i);
   });
 
-  it("GET / includes a repo link and a fancy project-info block", async () => {
+  it("GET / includes a repo link", async () => {
     const res = await request(createApp()).get("/");
     expect(res.text).toContain("https://github.com/CipoBaruf/auto-flow-template/");
-    expect(res.text).toContain("terminal-body");
-    expect(res.text).toContain("auto-flow-app");
   });
 
   it("GET / renders an oh-my-zsh-style prompt line and ASCII divider", async () => {
@@ -46,6 +43,15 @@ describe("baseline app", () => {
     expect(bannerMatch).not.toBeNull();
     const bannerLines = (bannerMatch?.[1] ?? "").trim().split("\n");
     expect(bannerLines.length).toBeGreaterThanOrEqual(12);
-    expect(res.text).toContain("$ cat about.json");
+  });
+
+  it("GET / replies to László Bende's message instead of the old promo copy", async () => {
+    const res = await request(createApp()).get("/");
+    expect(res.text).toContain("László Bende");
+    expect(res.text).toContain("Hey guuuys");
+    expect(res.text).toContain("How your days going?");
+    expect(res.text).toMatch(/working on this project/i);
+    expect(res.text).not.toContain("How a cycle works");
+    expect(res.text).not.toContain("about.json");
   });
 });
