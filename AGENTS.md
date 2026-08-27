@@ -56,21 +56,16 @@ guess on scope ("should this endpoint be public?") — ask.
   must always exist (Render uses it); `/` is the one HTML page — keep its styling
   self-contained in `homePage.ts` rather than pulling in a templating engine or
   static assets pipeline.
-- Current state: `GET /` renders an HTML landing page with a large multi-line figlet-style
-  ASCII wordmark spelling "AUTO" / "FLOW" (block-letter art in a `<pre class="banner">`,
-  gradient-colored via CSS `background-clip: text`), a decorative ASCII divider, an
-  oh-my-zsh-style prompt line (`➜ auto-flow-app git:(main) ✗`), and a single terminal-styled
-  card (HUD corner accents, fake terminal title bar) rendering a `CHAT` log from
-  `homePage.ts` — László Bende's message ("Hey guuuys" / "How your days going?") answered
-  with a reply that Ezequiel is working on this project (`.chat-laszlo` / `.chat-me`
-  classes color the two speakers). No more steps list, tagline, or "about.json" project-info
-  block — those were removed per issue #17 ("remove all the texts ... add a text to answer
-  this [message]"), the banner/divider/prompt were kept as page chrome, not prose. Footer
-  still credits Ezequiel with a link to `https://github.com/cipoBaruf` plus a link to this
-  repo, `https://github.com/CipoBaruf/auto-flow-template/`; `GET /health` returns JSON
-  status + environment. No database.
+- Current state: `GET /` renders a minimal HTML landing page: a single centered
+  `<h1 class="hero">` reading "Santi vuelos laterales", styled with the same dark-theme
+  gradient-text look (`background-clip: text` over the violet/teal gradient) previously
+  used for the ASCII banner. Per issue #19 ("remove all the text just leave 'Santi vuelos
+  laterales' same styles"), the ASCII wordmark banner, divider, oh-my-zsh-style prompt
+  line, the terminal-styled chat card (László Bende / Ezequiel conversation), and the
+  footer (author link + repo link) were all removed — there is no other text or markup
+  on the page besides the hero line. `GET /health` still returns JSON status +
+  environment. No database.
 - Styling: dark, clean theme (near-black background, violet `--accent` + teal
-  `--accent-2`, no orange) in the spirit of render.com/oh-my-zsh terminal splash
-  screens — big gradient ASCII wordmarks, terminal/HUD framing, monospace accents —
-  keep it that way for any future `/` changes. The banner text is built letter-by-letter
-  from fixed-width ASCII-art glyphs; verify line lengths stay aligned if you change it.
+  `--accent-2`, no orange) is kept for any future `/` changes even though the ASCII
+  banner/terminal chrome was removed — reuse the gradient-text (`background-clip: text`)
+  treatment for any new hero-style text rather than reintroducing plain color.
