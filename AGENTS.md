@@ -59,16 +59,19 @@ guess on scope ("should this endpoint be public?") — ask.
 - Current state: `GET /` renders an HTML landing page with a large multi-line figlet-style
   ASCII wordmark spelling "AUTO" / "FLOW" (block-letter art in a `<pre class="banner">`,
   gradient-colored via CSS `background-clip: text`), a decorative ASCII divider, an
-  oh-my-zsh-style prompt line (`➜ auto-flow-app git:(main) ✗`), project overview cards
-  with HUD-style corner accents, a terminal-styled "about.json" card (fake `$ cat
-  about.json` prompt line + `PROJECT_INFO` rendered as JSON in `homePage.ts` — name,
-  tagline, stack, author, repo), and a footer crediting Ezequiel with a link to
-  `https://github.com/cipoBaruf` plus a link to this repo,
-  `https://github.com/CipoBaruf/auto-flow-template/`); `GET /health` returns JSON status +
-  environment. No database. Per issue #19 staging feedback ("keep the ascii logo as
-  before and all the old page style"), this full ASCII/terminal layout was restored
-  after briefly being stripped down to a single hero line (#17, #19) — do not remove
-  the banner/prompt/terminal/footer again without an explicit request.
+  oh-my-zsh-style prompt line (`➜ auto-flow-app git:(main) ✗`), and a single terminal-styled
+  card (HUD corner accents, fake terminal title bar) rendering a `CHAT` log from
+  `homePage.ts` — László Bende's message ("Hey guuuys" / "How your days going?") answered
+  with a reply that Ezequiel is working on this project (`.chat-laszlo` / `.chat-me`
+  classes color the two speakers). No steps list, tagline, or "about.json" project-info
+  block — the banner/divider/prompt are kept as page chrome, not prose. Footer still
+  credits Ezequiel with a link to `https://github.com/cipoBaruf` plus a link to this repo,
+  `https://github.com/CipoBaruf/auto-flow-template/`; `GET /health` returns JSON status +
+  environment. No database. History: issue #17 introduced this chat layout (replacing an
+  earlier steps-list/about.json version from #15); #19 briefly reverted to the #15 layout
+  ("keep the ascii logo as before and all the old page style"); issue #21 rolled back to
+  the #17 chat layout again — treat #17's chat card as the current baseline and do not
+  swap back to the steps-list/about.json version without an explicit request.
 - Styling: dark, clean theme (near-black background, violet `--accent` + teal
   `--accent-2`, no orange) in the spirit of render.com/oh-my-zsh terminal splash
   screens — big gradient ASCII wordmarks, terminal/HUD framing, monospace accents —

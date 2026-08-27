@@ -14,52 +14,25 @@ const BANNER = String.raw`
 ╚═╝     ╚══════╝ ╚═════╝  ╚══╝╚══╝
 `.trim();
 
-const STEPS = [
-  ["request", "you send a feature request over Telegram"],
-  ["build", "the agent implements it in app/, writes tests, updates docs"],
-  ["verify", "npm run check gates every change, staging deploys on green"],
-  ["ship", "you review on staging, then /release promotes to production"],
-] as const;
-
 const REPO_URL = "https://github.com/CipoBaruf/auto-flow-template/";
 
-const PROJECT_INFO = {
-  name: "auto-flow-app",
-  tagline: "Clean code. Automatic flow. Trusted by design.",
-  stack: ["Node 24", "TypeScript", "Express"],
-  author: "Ezequiel",
-  repo: REPO_URL,
-} as const;
+const CHAT = [
+  { from: "laszlo", name: "László Bende", lines: ["Hey guuuys", "How your days going?"] },
+  { from: "me", name: "Ezequiel", lines: ["Hey! All good here — I'm working on this project."] },
+] as const;
 
 function escapeHtml(value: string): string {
   return value.replace(/[&<>]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[char] as string);
 }
 
-function jsonValueHtml(value: string | readonly string[]): string {
-  if (Array.isArray(value)) {
-    const items = value.map((item) => `<span class="json-str">"${escapeHtml(item)}"</span>`).join(", ");
-    return `[${items}]`;
-  }
-  return `<span class="json-str">"${escapeHtml(value as string)}"</span>`;
-}
-
-function renderProjectInfoJson(): string {
-  const lines = Object.entries(PROJECT_INFO).map(
-    ([key, value]) =>
-      `  <span class="json-key">"${key}"</span>: ${jsonValueHtml(value as string | readonly string[])}`,
-  );
-  return `{\n${lines.join(",\n")}\n}`;
+function renderChatLog(): string {
+  return CHAT.map(({ from, name, lines }) => {
+    const body = lines.map((line) => escapeHtml(line)).join("\n  ");
+    return `<span class="chat-name chat-${from}">${escapeHtml(name)}:</span>\n  ${body}`;
+  }).join("\n\n");
 }
 
 export function renderHomePage(): string {
-  const steps = STEPS.map(
-    ([label, description]) => `
-        <li>
-          <span class="step-label">${label}</span>
-          <span class="step-desc">${description}</span>
-        </li>`,
-  ).join("");
-
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -141,20 +114,6 @@ export function renderHomePage(): string {
   .prompt-git { color: var(--muted); }
   .prompt-branch { color: var(--accent); }
   .prompt-dirty { color: var(--err); }
-  h1 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    margin: 0 0 0.4rem;
-    color: var(--ink);
-    text-align: center;
-  }
-  p.tagline {
-    margin: 0 0 2.5rem;
-    color: var(--muted);
-    font-size: 0.95rem;
-    text-align: center;
-  }
   section.card {
     position: relative;
     background: var(--card);
@@ -164,13 +123,8 @@ export function renderHomePage(): string {
     margin-bottom: 2.5rem;
   }
   section.card::before,
-  section.card::after,
-  section.card h2::before,
-  section.card h2::after {
-    content: "";
-  }
-  section.card::before,
   section.card::after {
+    content: "";
     position: absolute;
     width: 0.85rem;
     height: 0.85rem;
@@ -190,55 +144,6 @@ export function renderHomePage(): string {
     border-left: none;
     border-top: none;
     border-bottom-right-radius: 4px;
-  }
-  section.card h2 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin: 0 0 1.25rem;
-  }
-  section.card h2 .chevron {
-    color: var(--accent-2);
-  }
-  section.card h2::after {
-    flex: 1;
-    height: 0;
-    border-top: 1px dashed var(--line);
-  }
-  ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    counter-reset: step;
-  }
-  ol li {
-    counter-increment: step;
-    display: flex;
-    gap: 1rem;
-    align-items: baseline;
-    padding: 0.55rem 0;
-    border-top: 1px solid var(--line);
-    font-family: var(--mono);
-    font-size: 0.85rem;
-  }
-  ol li:first-child { border-top: none; }
-  ol li::before {
-    content: counter(step);
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .step-label {
-    color: var(--ink);
-    font-weight: 600;
-    min-width: 5.5rem;
-  }
-  .step-desc {
-    color: var(--muted);
   }
   section.terminal {
     padding: 0;
@@ -276,9 +181,11 @@ export function renderHomePage(): string {
     color: var(--ink);
     overflow-x: auto;
   }
-  .prompt-cmd { color: var(--accent-2); }
-  .json-key { color: var(--accent); }
-  .json-str { color: #7fd8a4; }
+  .chat-name {
+    font-weight: 700;
+  }
+  .chat-laszlo { color: var(--accent-2); }
+  .chat-me { color: var(--accent); }
   footer {
     text-align: center;
     font-size: 0.85rem;
@@ -314,23 +221,14 @@ export function renderHomePage(): string {
       <span class="prompt-git">git:(<span class="prompt-branch">main</span>)</span>
       <span class="prompt-dirty">&#10007;</span>
     </p>
-    <h1>Auto Flow App Creator</h1>
-    <p class="tagline">Clean code. Automatic flow. Trusted by design.</p>
-    <section class="card">
-      <h2><span class="chevron">&#10095;</span> How a cycle works</h2>
-      <ol>${steps}
-      </ol>
-    </section>
     <section class="card terminal">
       <div class="terminal-bar">
         <span class="dot dot-red"></span>
         <span class="dot dot-yellow"></span>
         <span class="dot dot-green"></span>
-        <span class="terminal-title">about.json</span>
+        <span class="terminal-title">chat</span>
       </div>
-      <pre class="terminal-body"><span class="prompt-cmd">$ cat about.json</span>
-
-${renderProjectInfoJson()}</pre>
+      <pre class="terminal-body">${renderChatLog()}</pre>
     </section>
     <footer>
       <p class="rule">· · · · · · · · · · · · · · · · · · ·</p>
