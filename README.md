@@ -38,9 +38,9 @@ the whole batch at once.
 
 Baseline placeholder the agent grows feature by feature: Node 24 + TypeScript + Express,
 Vitest tests. Endpoints: `GET /` (dark-themed HTML landing page with a large gradient
-figlet-style ASCII wordmark, an oh-my-zsh-style prompt line, project overview cards with
-terminal/HUD framing, a terminal-styled "about.json" project-info block, author's
-GitHub link, and a link to this repo), `GET /health` (status + environment).
+figlet-style ASCII wordmark, an oh-my-zsh-style prompt line, and a terminal-styled chat
+card replying to a message from László Bende, plus a footer with the author's GitHub
+link and a link to this repo), `GET /health` (status + environment).
 
 ```bash
 cd app && npm install && npm run dev     # local dev on :3000
