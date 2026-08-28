@@ -14,7 +14,7 @@ you (Telegram) ──/feature──▶ relay (your machine) ──dispatch──
      ▲                            │ answers as issue comments        │ implements + tests + docs
      │◀── questions / notify ─────┴─────────────────────────────────┘ pushes → PR → staging branch
      │                                                                    │
-     │◀── "🟡 staging deployed, test it" ◀── deploy-staging (test gate → Render staging)
+     │◀── "🟡 staging deployed, test it" ◀── deploy-staging (test gate → Cloud Run staging)
      ├── /changes <feedback> ──▶ agent runs again on the same branch
      ├── /feature <next thing> ──▶ next feature branches from staging's tip (stacks); previous PR auto-closes
      └── /release ──▶ if checks pass: merges everything on staging to main, explicitly
@@ -32,7 +32,7 @@ the whole batch at once.
 | Telegram relay ([auto-flow-relay](../auto-flow-relay)) | your machine (long polling) | free |
 | Developer agent (Claude Code headless) | GitHub Actions | your Claude subscription |
 | CI/CD (`.github/workflows/`) | GitHub Actions (public repo) | free, unlimited |
-| Staging + production | Render free tier | free (sleeps when idle) |
+| Staging + production | Google Cloud Run free tier | free (scale-to-zero, ~2s cold start) |
 
 ## The app (`app/`)
 
@@ -64,6 +64,9 @@ npm run check                            # typecheck + tests (the CI gate)
 - **Human gate**: nothing reaches production except via your explicit `/release` —
   `deploy-prod` has no automatic trigger of any kind, not even a push to `main`.
 - **One cycle at a time**: agent runs and deploys are serialized via Actions concurrency groups.
+- **URLs are never hand-typed**: each deploy reads its service's current `*.run.app`
+  URL straight from Cloud Run and uses it directly in the Telegram notification —
+  nothing to keep in sync or get stale.
 
 ## Get started
 

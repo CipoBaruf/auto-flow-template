@@ -1,6 +1,8 @@
 # SETUP — new project from this template (~15 min)
 
-Everything here is free tier except your existing Claude subscription.
+Everything here is free tier except your existing Claude subscription. Google Cloud
+Run's free tier requires a card on file (you won't be charged within the free tier
+limits) — everything else needs no card.
 
 ## 1. Create the repo
 
@@ -14,22 +16,23 @@ Everything here is free tier except your existing Claude subscription.
 - Get your **chat id**: message [@userinfobot](https://t.me/userinfobot), or start the relay and send `/start`.
 - One bot serves all your auto-flow projects (the relay routes by project).
 
-## 3. Render (two free services)
+## 3. Google Cloud Run
 
-For **staging** and **production**, create a Web Service from the repo:
+- Create or select a GCP project. Enable the **Cloud Run API** and **Cloud Build API**
+  (Console → APIs & Services → Enable APIs, or `gcloud services enable run.googleapis.com
+  cloudbuild.googleapis.com`).
+- Create a service account (e.g. `auto-flow-deployer`) with roles **Cloud Run Admin**
+  and **Service Account User**, and generate a JSON key for it (Console → IAM →
+  Service Accounts → your account → Keys → Add key → JSON). Save the file locally —
+  `bootstrap.sh` reads its path in step 5.
+- Note your **project ID** and a **region** (e.g. `us-central1`).
 
-| Setting        | Value                          |
-| -------------- | ------------------------------ |
-| Root Directory | `app`                          |
-| Build Command  | `npm ci`                       |
-| Start Command  | `npm start`                    |
-| Branch         | `staging` / `main`             |
-| Auto-Deploy    | **Off** (CI deploys via hook after the test gate) |
-| Env var        | `APP_ENV=staging` / `production` |
+Nothing else to click together — the two Cloud Run services (`auto-flow-staging`,
+`auto-flow-prod`) are created automatically the first time CI deploys, and each
+deploy prints its own current `*.run.app` URL (no URL to copy-paste or keep in sync).
 
-Copy each service's **Deploy Hook URL** (Settings → Deploy Hook) and its public URL.
-
-Free-tier note: services sleep after 15 min idle; first request after that takes ~30–60 s.
+Free-tier note: true scale-to-zero, ~2s cold start on the first request after idle
+(much faster than a typical PaaS free tier's 30–60s).
 
 ## 4. Tokens
 
