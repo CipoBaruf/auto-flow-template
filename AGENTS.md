@@ -41,6 +41,13 @@ It blocks until the user answers on Telegram and prints the answer to stdout.
 Ask few, batched, concrete questions. Prefer sensible defaults over asking; never
 guess on scope ("should this endpoint be public?") — ask.
 
+If the answer is naturally a small closed set (a handful of named choices, or
+yes/no), end the question with `[options: A | B | C]` — the user gets tappable
+buttons instead of having to type an exact match, e.g.:
+`./scripts/ask-user.sh 42 "Which theme should the homepage use? [options: Light | Dark | Follow system]"`.
+Leave the hint off for anything genuinely open-ended (a name, a description, free-form
+text) — those still work as plain text replies exactly as before.
+
 ## Definition of done (all required before you finish)
 
 - [ ] Feature implemented in `app/src/`.
