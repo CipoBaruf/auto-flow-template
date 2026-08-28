@@ -12,6 +12,17 @@
 # script polls for such a comment and clears the label once it finds one (or on
 # timeout), so the window where plain text = answer is exactly this call's lifetime.
 #
+# Small-choice questions: if $QUESTION ends with a "[options: A | B | C]" hint (see
+# AGENTS.md, "Asking the user"), this attaches a Telegram inline keyboard — one
+# button per option, callback_data "q:<issue>:<0-based index>" — so the relay can
+# resolve an answer to a tap instead of free text. The hint is deliberately left in
+# the sent message text (not stripped): the relay recovers the option list by
+# re-parsing the same "[options: ...]" hint straight off the delivered message
+# (ctx.callbackQuery.message.text) rather than needing it encoded in callback_data,
+# so both sides must agree on this exact convention. It's also a readable fallback
+# if buttons don't render on some client. A question with no such hint sends exactly
+# as before — plain text, no keyboard — that path is untouched.
+#
 # Needs: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, GH_TOKEN (gh CLI auth),
 # GITHUB_REPOSITORY. Optional: ASK_TIMEOUT_MINUTES (default 240).
 set -euo pipefail
@@ -29,10 +40,38 @@ clear_label() {
 gh label create "awaiting-answer" --repo "$GITHUB_REPOSITORY" --color FBCA04 --force >/dev/null 2>&1 || true
 gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-label "awaiting-answer" >/dev/null
 
-curl -fsS "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-  --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
-  --data-urlencode "text=❓ [#${ISSUE}] ${QUESTION}" \
-  -o /dev/null
+# Extract "[options: A | B | C]" (case-insensitive), if present. Portable POSIX ERE
+# (no PCRE lookaround) so this doesn't depend on GNU grep specifically.
+OPTIONS_RAW=$(printf '%s' "$QUESTION" | sed -nE 's/.*\[[Oo][Pp][Tt][Ii][Oo][Nn][Ss]:([^]]*)\].*/\1/p')
+REPLY_MARKUP=""
+if [ -n "$OPTIONS_RAW" ]; then
+  IFS='|' read -ra RAW_OPTS <<< "$OPTIONS_RAW"
+  OPTIONS=()
+  for opt in "${RAW_OPTS[@]}"; do
+    trimmed=$(printf '%s' "$opt" | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')
+    [ -n "$trimmed" ] && OPTIONS+=("$trimmed")
+  done
+  if [ "${#OPTIONS[@]}" -gt 0 ]; then
+    REPLY_MARKUP=$(printf '%s\n' "${OPTIONS[@]}" | jq -R -s --arg issue "$ISSUE" '
+      split("\n") | map(select(length > 0)) | to_entries |
+      map({text: (.value[0:60]), callback_data: ("q:" + $issue + ":" + (.key|tostring))}) |
+      map([.]) | {inline_keyboard: .}
+    ')
+  fi
+fi
+
+if [ -n "$REPLY_MARKUP" ]; then
+  curl -fsS "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+    --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+    --data-urlencode "text=❓ [#${ISSUE}] ${QUESTION}" \
+    --data-urlencode "reply_markup=${REPLY_MARKUP}" \
+    -o /dev/null
+else
+  curl -fsS "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+    --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+    --data-urlencode "text=❓ [#${ISSUE}] ${QUESTION}" \
+    -o /dev/null
+fi
 
 DEADLINE=$(( $(date +%s) + TIMEOUT_MINUTES * 60 ))
 while [ "$(date +%s)" -lt "$DEADLINE" ]; do
