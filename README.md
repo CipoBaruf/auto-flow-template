@@ -25,6 +25,11 @@ Send `/feature` again before releasing and the next feature builds on top of the
 one instead of replacing it — staging keeps accumulating until you `/release`, which ships
 the whole batch at once.
 
+`/feature` and `/changes` walk through a short inline-button wizard (project → type of
+change → confirm) before anything gets dispatched, catching a typo or ambiguous request
+in chat instead of a wasted agent run — every step also works as plain text. See
+[auto-flow-relay's README](../auto-flow-relay/README.md) for the full command reference.
+
 ## Components
 
 | Piece | Where it runs | Cost |

@@ -21,10 +21,20 @@ limits) — everything else needs no card.
 - Create or select a GCP project. Enable the **Cloud Run API** and **Cloud Build API**
   (Console → APIs & Services → Enable APIs, or `gcloud services enable run.googleapis.com
   cloudbuild.googleapis.com`).
-- Create a service account (e.g. `auto-flow-deployer`) with roles **Cloud Run Admin**
-  and **Service Account User**, and generate a JSON key for it (Console → IAM →
-  Service Accounts → your account → Keys → Add key → JSON). Save the file locally —
-  `bootstrap.sh` reads its path in step 5.
+- Create a service account (e.g. `auto-flow-deployer`) with these five roles — all are
+  needed for `gcloud run deploy --source` (it builds via Cloud Build and pushes to
+  Artifact Registry under the hood, not just Cloud Run itself):
+  - **Cloud Run Admin**
+  - **Service Account User**
+  - **Artifact Registry Administrator**
+  - **Cloud Build Editor**
+  - **Storage Admin**
+
+  Then generate a JSON key for it (Console → IAM → Service Accounts → your account →
+  Keys → Add key → JSON). Save the file locally — `bootstrap.sh` reads its path in
+  step 5. Note: IAM role changes can take a couple of minutes to propagate — if a
+  deploy fails with a permission error right after granting a role, wait a bit and
+  retry before assuming the role is missing.
 - Note your **project ID** and a **region** (e.g. `us-central1`).
 
 Nothing else to click together — the two Cloud Run services (`auto-flow-staging`,

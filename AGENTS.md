@@ -53,6 +53,13 @@ text) — those still work as plain text replies exactly as before.
 - [ ] Feature implemented in `app/src/`.
 - [ ] Tests added/updated in `app/test/` covering the new behavior.
 - [ ] `npm run check` passes inside `app/` (typecheck + full test suite). Iterate until green.
+- [ ] Any package actually needed to **run** the app (imported/required by code that
+      executes at startup or in a request handler — not just used in tests or the
+      typecheck step) is in `dependencies`, never `devDependencies`. Production deploys
+      install with dev dependencies omitted; a runtime package misplaced in
+      `devDependencies` won't fail any local check but will make the container fail to
+      start in production with no obvious error (this happened for real with `tsx`,
+      the app's own entrypoint runner — caught it the hard way via Cloud Run logs).
 - [ ] **Docs updated in the same change:**
       `README.md` — if user-facing behavior, endpoints, config, or setup changed.
       `AGENTS.md` (project-specific section below) — if structure, conventions, or
@@ -74,7 +81,8 @@ text) — those still work as plain text replies exactly as before.
   `app/src/homePage.ts` renders the `GET /` landing page HTML (self-contained, inline
   `<style>`); `app/src/index.ts` is the entrypoint; tests in `app/test/`.
 - Conventions: small routers per domain as the app grows; `/health` stays JSON and
-  must always exist (Render uses it); `/` is the one HTML page — keep its styling
+  must always exist (useful for manual checks; Cloud Run's own startup probe is a
+  plain TCP check on the port, not this route); `/` is the one HTML page — keep its styling
   self-contained in `homePage.ts` rather than pulling in a templating engine or
   static assets pipeline.
 - Current state: `GET /` renders an HTML landing page with a large multi-line figlet-style
