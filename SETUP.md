@@ -37,9 +37,12 @@ limits) — everything else needs no card.
   retry before assuming the role is missing.
 - Note your **project ID** and a **region** (e.g. `us-central1`).
 
-Nothing else to click together — the two Cloud Run services (`auto-flow-staging`,
-`auto-flow-prod`) are created automatically the first time CI deploys, and each
-deploy prints its own current `*.run.app` URL (no URL to copy-paste or keep in sync).
+Nothing else to click together — the two Cloud Run services (named `<repo>-staging`
+and `<repo>-prod`, e.g. `myproject-staging`) are created automatically the first
+time CI deploys, and each deploy prints its own current `*.run.app` URL (no URL to
+copy-paste or keep in sync). The service name is derived from the repo, so sharing
+one GCP project across multiple projects from this template is safe — each gets
+its own distinct services, never colliding with another project's.
 
 Free-tier note: true scale-to-zero, ~2s cold start on the first request after idle
 (much faster than a typical PaaS free tier's 30–60s).

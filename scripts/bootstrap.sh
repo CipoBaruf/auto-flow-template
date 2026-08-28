@@ -48,5 +48,6 @@ TELEGRAM_BOT_TOKEN="$TELEGRAM_BOT_TOKEN" TELEGRAM_CHAT_ID="$TELEGRAM_CHAT_ID" \
 
 echo
 echo "Done. Next: add this repo to the relay's config.json and start the relay."
-echo "The two Cloud Run services (auto-flow-staging, auto-flow-prod) are created"
-echo "automatically on first deploy — nothing to click together by hand."
+echo "The two Cloud Run services (<repo>-staging, <repo>-prod) are created"
+echo "automatically on first deploy — nothing to click together by hand, and the"
+echo "name is repo-derived so sharing a GCP project across projects is safe."
